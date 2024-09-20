@@ -16,9 +16,15 @@
           sqlite
       ];
     in {
-      devShell = pkgs.mkShell {
-        name = "kotlin";
-        buildInputs = core-pkgs ++ [pkgs.jetbrains.idea-community];
+      devShells = {
+        default = pkgs.mkShell {
+          name = "kotlin";
+          buildInputs = core-pkgs;
+        };
+        no-idea = pkgs.mkShell {
+          name = "kotlin-idea";
+          buildInputs = core-pkgs ++ [pkgs.jetbrains.idea-community];
+        };
       };
     });
 }

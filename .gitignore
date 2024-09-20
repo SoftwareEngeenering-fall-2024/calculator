@@ -8,3 +8,6 @@ build
 # Ignore direnv configuration & temporary files
 .direnv
 .envrc
+
+# Ignore idea files
+.idea

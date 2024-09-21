@@ -11,19 +11,20 @@
     let
       pkgs = import nixpkgs { inherit system; };
       core-pkgs = with pkgs; [
-          kotlin # compiler
           gradle # building
           sqlite
       ];
     in {
       devShells = {
-        default = pkgs.mkShell {
+        no-idea = pkgs.mkShell {
           name = "kotlin";
           buildInputs = core-pkgs;
+          GRADLE_USER_HOME="./gradle-cache";
         };
-        no-idea = pkgs.mkShell {
+        default = pkgs.mkShell {
           name = "kotlin-idea";
           buildInputs = core-pkgs ++ [pkgs.jetbrains.idea-community];
+          GRADLE_USER_HOME="./gradle-cache";
         };
       };
     });

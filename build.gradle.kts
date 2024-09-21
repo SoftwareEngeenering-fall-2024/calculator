@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+    implementation("com.michael-bull.kotlin-result:kotlin-result:2.0.0")
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("ch.qos.logback:logback-classic:$logback_version")

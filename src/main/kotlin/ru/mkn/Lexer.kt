@@ -4,15 +4,16 @@ import ru.mkn.data.Literal
 
 class Lexer(val input: String) {
     private  val DOT = '.'
+    private val formatedInput = input.replace(" ", "")
     private val tokens = arrayListOf<Token>()
     fun tokenize(): ArrayList<Token> {
         var curNum = ""
 
-        for (i in input.indices) {
-            val value = input[i].digitToIntOrNull()
+        for (i in formatedInput.indices) {
+            val value = formatedInput[i].digitToIntOrNull()
 
-            if (value != null || input[i] == DOT)
-                curNum += input[i]
+            if (value != null || formatedInput[i] == DOT)
+                curNum += formatedInput[i]
             else {
                 if (curNum.toIntOrNull() != null)
                     tokens.add(LiteralToken(Literal.IntLit(curNum.toInt())))
@@ -21,8 +22,7 @@ class Lexer(val input: String) {
 
                 curNum = ""
 
-                if (input[i] != ' ')
-                    primitiveTokenize(input[i])
+                primitiveTokenize(formatedInput[i])
             }
             if (curNum.isNotEmpty() && curNum[0] == DOT)
                 curNum = ""

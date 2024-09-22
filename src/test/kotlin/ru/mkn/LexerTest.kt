@@ -99,8 +99,7 @@ class LexerTest {
             PrimitiveToken.LeftParen,
             LiteralToken(Literal.IntLit(165)),
             PrimitiveToken.Minus,
-            LiteralToken(Literal.FloatLit(16.0)),
-            LiteralToken(Literal.IntLit(15)),
+            LiteralToken(Literal.FloatLit(16.15)),
             PrimitiveToken.RightParen)
 
         val res1 = Lexer(str1).tokenize()

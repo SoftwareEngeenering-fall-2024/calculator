@@ -52,9 +52,9 @@ sealed class Value {
         }
     }
 
-    operator fun div(value: Value) : Value {
+    operator fun div(value: Value) : Value? {
         if (value == IntValue(0) || value == FloatValue(0.0)) {
-            throw IllegalArgumentException("Division by zero!")
+            return null
         }
         return when (this) {
             is IntValue -> when (value) {

@@ -19,11 +19,12 @@ class EvalVisitor : Visitor<Result<Value, String>> {
                     BinaryKind.Sub -> Ok(leftResult - rightResult)
                     BinaryKind.Mul -> Ok(leftResult * rightResult)
                     BinaryKind.Div -> {
-                        try {
-                            Ok(leftResult / rightResult)
+                        val quotient = leftResult / rightResult
+                        if (quotient == null) {
+                            Err("Division by zero!")
                         }
-                        catch (e: IllegalArgumentException) {
-                            Err(e.message ?: "")
+                        else {
+                            Ok(quotient)
                         }
                     }
                     BinaryKind.Power -> Ok(leftResult.pow(rightResult))

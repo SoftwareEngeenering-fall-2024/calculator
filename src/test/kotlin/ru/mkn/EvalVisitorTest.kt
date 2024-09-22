@@ -13,33 +13,33 @@ class EvalVisitorTest {
     private val evalVisitor = EvalVisitor()
 
     @Test
-    fun intLiteral() = testApplication {
+    fun intLiteral() {
         val expr = Expr(ExprKind.Literal(Literal.IntLit(1)))
         assertEquals(Ok(Value.IntValue(1)), evalVisitor.visit(expr))
     }
 
     @Test
-    fun floatLiteral() = testApplication {
+    fun floatLiteral() {
         val expr = Expr(ExprKind.Literal(Literal.FloatLit(1.0)))
         assertEquals(Ok(Value.FloatValue(1.0)), evalVisitor.visit(expr))
     }
 
     @Test
-    fun unaryOperatorInt() = testApplication {
+    fun unaryOperatorInt() {
         val left = Expr(ExprKind.Literal(Literal.IntLit(5)))
         val expr = Expr(ExprKind.Unary(UnaryKind.Neg, left))
         assertEquals(Ok(Value.IntValue(-5)), evalVisitor.visit(expr))
     }
 
     @Test
-    fun unaryOperatorFloat() = testApplication {
+    fun unaryOperatorFloat() {
         val left = Expr(ExprKind.Literal(Literal.FloatLit(5.0)))
         val expr = Expr(ExprKind.Unary(UnaryKind.Neg, left))
         assertEquals(Ok(Value.FloatValue(-5.0)), evalVisitor.visit(expr))
     }
 
     @Test
-    fun sumTwoArguments() = testApplication {
+    fun sumTwoArguments() {
         val left = Expr(ExprKind.Literal(Literal.FloatLit(3.3)))
         val right = Expr(ExprKind.Literal(Literal.IntLit(5)))
         val expr = Expr(ExprKind.Binary(BinaryKind.Sum, left, right))
@@ -47,7 +47,7 @@ class EvalVisitorTest {
     }
 
     @Test
-    fun mulTwoArguments() = testApplication {
+    fun mulTwoArguments() {
         val left = Expr(ExprKind.Literal(Literal.FloatLit(3.383)))
         val right = Expr(ExprKind.Literal(Literal.IntLit(4)))
         val expr = Expr(ExprKind.Binary(BinaryKind.Mul, left, right))
@@ -55,7 +55,7 @@ class EvalVisitorTest {
     }
 
     @Test
-    fun subTwoArguments() = testApplication {
+    fun subTwoArguments() {
         val left = Expr(ExprKind.Literal(Literal.FloatLit(3.383)))
         val right = Expr(ExprKind.Literal(Literal.FloatLit(4.1)))
         val expr = Expr(ExprKind.Binary(BinaryKind.Sub, left, right))
@@ -63,7 +63,7 @@ class EvalVisitorTest {
     }
 
     @Test
-    fun divTwoGoodArguments() = testApplication {
+    fun divTwoGoodArguments() {
         val left = Expr(ExprKind.Literal(Literal.IntLit(-5)))
         val right = Expr(ExprKind.Literal(Literal.IntLit(8)))
         val expr = Expr(ExprKind.Binary(BinaryKind.Div, left, right))
@@ -71,7 +71,7 @@ class EvalVisitorTest {
     }
 
     @Test
-    fun divTwoBadArguments() = testApplication {
+    fun divTwoBadArguments() {
         val left = Expr(ExprKind.Literal(Literal.IntLit(-5)))
         val right = Expr(ExprKind.Literal(Literal.IntLit(0)))
         val expr = Expr(ExprKind.Binary(BinaryKind.Div, left, right))
@@ -79,7 +79,7 @@ class EvalVisitorTest {
     }
 
     @Test
-    fun powerTwoArguments() = testApplication {
+    fun powerTwoArguments() {
         val left = Expr(ExprKind.Literal(Literal.IntLit(-5)))
         val right = Expr(ExprKind.Literal(Literal.IntLit(4)))
         val expr = Expr(ExprKind.Binary(BinaryKind.Power, left, right))
@@ -87,7 +87,7 @@ class EvalVisitorTest {
     }
 
     @Test
-    fun bigExpression() = testApplication {
+    fun bigExpression() {
         val left1 = Expr(ExprKind.Literal(Literal.IntLit(-5)))
         val right1 = Expr(ExprKind.Literal(Literal.IntLit(2)))
         val expr1 = Expr(ExprKind.Binary(BinaryKind.Power, left1, right1)) // (-5)^2

@@ -2,15 +2,14 @@ package ru.mkn
 
 import ru.mkn.data.Literal
 
-class Lexer(val input: String) {
+class Lexer(private val input: String) {
     private  val DOT = '.'
-    private val formatedInput = input.replace(" ", "")
     private val tokens = arrayListOf<Token>()
     private var curNum = ""
     private var isFloat = false
     fun tokenize(): ArrayList<Token> {
 
-        formatedInput.forEach {
+        input.forEach {
             if (it.digitToIntOrNull() != null || it == DOT)
                 parseLiteral(it)
             else

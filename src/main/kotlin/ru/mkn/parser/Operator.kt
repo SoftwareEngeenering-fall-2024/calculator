@@ -8,7 +8,7 @@ enum class Operator {
     Add, Subtract, Divide, Multiply, Power;
 
     companion object {
-        fun fromToken(token: Token) : Operator? {
+        fun fromToken(token: Token): Operator? {
             return when (token) {
                 PrimitiveToken.Plus -> Add
                 PrimitiveToken.Minus -> Subtract
@@ -18,11 +18,9 @@ enum class Operator {
                 else -> null
             }
         }
-
-
     }
 
-    fun precedence() : Int {
+    fun precedence(): Int {
         return when (this) {
             Power -> 7
             Multiply, Divide -> 6
@@ -30,7 +28,7 @@ enum class Operator {
         }
     }
 
-    fun toAstBinOp() : BinaryKind {
+    fun toAstBinOp(): BinaryKind {
         return when (this) {
             Power -> BinaryKind.Power
             Multiply -> BinaryKind.Mul
@@ -39,5 +37,4 @@ enum class Operator {
             Add -> BinaryKind.Sum
         }
     }
-
 }

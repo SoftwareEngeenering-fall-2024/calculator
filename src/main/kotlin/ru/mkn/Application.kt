@@ -17,6 +17,7 @@ import ru.mkn.visit.EvalVisitor
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
+const val ROUTE = "calc"
 fun Application.configureDatabase(): Database {
     val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
     Database.Schema.create(driver)
@@ -35,18 +36,16 @@ fun Application.module() {
             }.mapBoth(
                 { value ->
                     db.evaluationsQueries.insert(calculation.expression, value.toString())
-                    call.respond(HttpStatusCode.OK, Json.encodeToString(value)) },
+                    call.respond(HttpStatusCode.OK, value.toString()) },
                 { error ->
                     call.respond(HttpStatusCode.BadRequest, error)
                 }
             )
         }
-        get("/calc/hist") {
-            val res = db.evaluationsQueries.selectAll().executeAsList().toString()
-            call.respond(HttpStatusCode.OK, res)
-        }
-        post("/calc/hist") {
-            call.respond(HttpStatusCode.OK)
+        get("/$ROUTE/hist") {
+            val evaluations = db.evaluationsQueries.selectAll().executeAsList()
+            val responseBody = evaluations.map { EvaluatedCalculation(it.expression, it.result) }
+            call.respond(HttpStatusCode.OK, Json.encodeToString(responseBody))
         }
     }
 }

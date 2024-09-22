@@ -10,17 +10,25 @@ class Lexer(private val input: String) {
     fun tokenize(): ArrayList<Token> {
 
         input.forEach {
-            if (it.digitToIntOrNull() != null || it == DOT)
+            if (it.digitToIntOrNull() != null || it == DOT) {
                 parseLiteral(it)
-            else
+            }
+            else {
                 parsePrimitiveToken(it)
+            }
+        }
+        if (curNum.toIntOrNull() != null) {
+            tokens.add(LiteralToken(Literal.IntLit(curNum.toInt())))
+        } else if (curNum.toDoubleOrNull() != null) {
+            tokens.add(LiteralToken(Literal.FloatLit(curNum.toDouble())))
         }
         return tokens
     }
 
     private fun parsePrimitiveToken(c: Char){
-        if (curNum != "")
+        if (curNum != "") {
             parseLiteral(' ')
+        }
         when (c) {
             '+' -> tokens.add(PrimitiveToken.Plus)
             '-' -> tokens.add(PrimitiveToken.Minus)
@@ -33,22 +41,25 @@ class Lexer(private val input: String) {
     }
     private fun parseLiteral(c: Char) {
         val value = c.digitToIntOrNull()
-        if (value != null)
+        if (value != null) {
             curNum += c
+        }
         else if (c == DOT && !isFloat && curNum != "") {
             curNum += c
             isFloat = true
         }
         else {
-            if (curNum.toIntOrNull() != null)
+            if (curNum.toIntOrNull() != null) {
                 tokens.add(LiteralToken(Literal.IntLit(curNum.toInt())))
+            }
             else if (curNum.toDoubleOrNull() != null) {
                 tokens.add(LiteralToken(Literal.FloatLit(curNum.toDouble())))
                 isFloat = false
             }
 
-            if (c != ' ')
+            if (c != ' ') {
                 tokens.add(PrimitiveToken.DotToken)
+            }
             curNum = ""
         }
     }

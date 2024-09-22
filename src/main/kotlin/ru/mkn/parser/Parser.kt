@@ -14,7 +14,7 @@ class Parser(val tokens: ArrayList<Token>) {
     inner class TokenCursor {
         private val tokenStream = tokens.iterator()
 
-        fun next() : Token? {
+        fun next(): Token? {
             return if (!tokenStream.hasNext()) {
                 null
             } else {
@@ -24,7 +24,7 @@ class Parser(val tokens: ArrayList<Token>) {
     }
 
     private val tokenCursor = TokenCursor()
-    private var token : Token = DummyToken
+    private var token: Token = DummyToken
 
     init {
         bump()
@@ -34,18 +34,20 @@ class Parser(val tokens: ArrayList<Token>) {
         token = tokenCursor.next() ?: DummyToken
     }
 
-    private fun makeExpr(exprKind: ExprKind) : Expr = Expr(exprKind)
+    private fun makeExpr(exprKind: ExprKind): Expr = Expr(exprKind)
 
-    private fun makeUnary(unOpKind: UnaryKind, expr: Expr) : ExprKind = ExprKind.Unary(unOpKind, expr)
+    private fun makeUnary(unOpKind: UnaryKind, expr: Expr): ExprKind = ExprKind.Unary(unOpKind, expr)
 
-    private fun makeBinary(binOpKind: BinaryKind, left: Expr, right: Expr) : ExprKind = ExprKind.Binary(binOpKind, left, right)
-    private fun parseUnary(kind: UnaryKind) : Result<ExprKind, String> = binding {
+    private fun makeBinary(binOpKind: BinaryKind, left: Expr, right: Expr): ExprKind =
+        ExprKind.Binary(binOpKind, left, right)
+
+    private fun parseUnary(kind: UnaryKind): Result<ExprKind, String> = binding {
         bump()
         val expr = parsePrefix().bind()
         makeUnary(kind, expr)
     }
 
-    private fun expect(curToken: Token) : Result<Unit, String> = binding {
+    private fun expect(curToken: Token): Result<Unit, String> = binding {
         if (token != curToken) {
             Err("Unexpected token $curToken, $token expected")
         } else {
@@ -53,31 +55,34 @@ class Parser(val tokens: ArrayList<Token>) {
         }
     }
 
-    private fun parsePrefix() : Result<Expr, String> = binding {
+    private fun parsePrefix(): Result<Expr, String> = binding {
         when (val curToken = token) {
             is LiteralToken -> {
                 bump()
                 makeExpr(ExprKind.Literal(curToken.literal))
             }
+
             PrimitiveToken.Minus -> {
                 val opKind = parseUnary(UnaryKind.Neg).bind()
                 makeExpr(opKind)
             }
+
             PrimitiveToken.LeftParen -> {
                 expect(PrimitiveToken.LeftParen)
                 val expr = parse().bind()
                 expect(PrimitiveToken.RightParen)
                 expr
             }
+
             else -> {
-                Err("Unexpected token $curToken, $token expected").bind()
+                Err("Syntax error").bind()
             }
         }
     }
 
-    private fun parseWithPrec(minPrec: Int) : Result<Expr, String> = binding {
+    private fun parseWithPrec(minPrec: Int): Result<Expr, String> = binding {
         var lhs = parsePrefix().bind()
-        var op : Operator? = null
+        var op: Operator? = null
         while (true) {
             op = Operator.fromToken(token) ?: break
             val prec = op.precedence()
@@ -91,6 +96,6 @@ class Parser(val tokens: ArrayList<Token>) {
         lhs
     }
 
-    fun parse() : Result<Expr, String> =
+    fun parse(): Result<Expr, String> =
         parseWithPrec(0)
 }

@@ -1,4 +1,3 @@
-
 import ru.mkn.Lexer
 import ru.mkn.LiteralToken
 import ru.mkn.PrimitiveToken
@@ -19,7 +18,8 @@ class LexerTest {
             LiteralToken(Literal.IntLit(6)),
             PrimitiveToken.Cap,
             LiteralToken(Literal.IntLit(2)),
-            PrimitiveToken.RightParen)
+            PrimitiveToken.RightParen
+        )
 
         val res = Lexer(str).tokenize()
 
@@ -39,7 +39,8 @@ class LexerTest {
             LiteralToken(Literal.FloatLit(16.13)),
             PrimitiveToken.Minus,
             LiteralToken(Literal.FloatLit(16.15)),
-            PrimitiveToken.RightParen)
+            PrimitiveToken.RightParen
+        )
 
         val res = Lexer(str).tokenize()
 
@@ -58,7 +59,8 @@ class LexerTest {
             PrimitiveToken.Minus,
             PrimitiveToken.Cap,
             LiteralToken(Literal.IntLit(2)),
-            PrimitiveToken.RightParen)
+            PrimitiveToken.RightParen
+        )
 
         val res = Lexer(str).tokenize()
 
@@ -76,12 +78,14 @@ class LexerTest {
             PrimitiveToken.DotToken,
             PrimitiveToken.DotToken,
             LiteralToken(Literal.FloatLit(2.4)),
-            PrimitiveToken.DotToken)
+            PrimitiveToken.DotToken
+        )
 
         val res1 = Lexer(str1).tokenize()
 
         assertContentEquals(res1, expect1)
     }
+
     @Test
     fun testMoreDots2() {
         val str = "..15+16.*(..165-16.15)"
@@ -99,7 +103,8 @@ class LexerTest {
             LiteralToken(Literal.IntLit(165)),
             PrimitiveToken.Minus,
             LiteralToken(Literal.FloatLit(16.15)),
-            PrimitiveToken.RightParen)
+            PrimitiveToken.RightParen
+        )
 
         val res = Lexer(str).tokenize()
 

@@ -6,31 +6,22 @@ class Lexer(val input: String) {
     private  val DOT = '.'
     private val formatedInput = input.replace(" ", "")
     private val tokens = arrayListOf<Token>()
+    private var curNum = ""
+    private var isFloat = false
     fun tokenize(): ArrayList<Token> {
-        var curNum = ""
 
-        for (i in formatedInput.indices) {
-            val value = formatedInput[i].digitToIntOrNull()
-
-            if (value != null || formatedInput[i] == DOT)
-                curNum += formatedInput[i]
-            else {
-                if (curNum.toIntOrNull() != null)
-                    tokens.add(LiteralToken(Literal.IntLit(curNum.toInt())))
-                else if (curNum.toDoubleOrNull() != null)
-                    tokens.add(LiteralToken(Literal.FloatLit(curNum.toDouble())))
-
-                curNum = ""
-
-                primitiveTokenize(formatedInput[i])
-            }
-            if (curNum.isNotEmpty() && curNum[0] == DOT)
-                curNum = ""
+        formatedInput.forEach {
+            if (it.digitToIntOrNull() != null || it == DOT)
+                parseLiteral(it)
+            else
+                parsePrimitiveToken(it)
         }
         return tokens
     }
 
-    private fun primitiveTokenize(c: Char) {
+    private fun parsePrimitiveToken(c: Char){
+        if (curNum != "")
+            parseLiteral(' ')
         when (c) {
             '+' -> tokens.add(PrimitiveToken.Plus)
             '-' -> tokens.add(PrimitiveToken.Minus)
@@ -39,6 +30,27 @@ class Lexer(val input: String) {
             '(' -> tokens.add(PrimitiveToken.LeftParen)
             ')' -> tokens.add(PrimitiveToken.RightParen)
             '^' -> tokens.add(PrimitiveToken.Cap)
+        }
+    }
+    private fun parseLiteral(c: Char) {
+        val value = c.digitToIntOrNull()
+        if (value != null)
+            curNum += c
+        else if (c == DOT && !isFloat && curNum != "") {
+            curNum += c
+            isFloat = true
+        }
+        else {
+            if (curNum.toIntOrNull() != null)
+                tokens.add(LiteralToken(Literal.IntLit(curNum.toInt())))
+            else if (curNum.toDoubleOrNull() != null) {
+                tokens.add(LiteralToken(Literal.FloatLit(curNum.toDouble())))
+                isFloat = false
+            }
+
+            if (c != ' ')
+                tokens.add(PrimitiveToken.DotToken)
+            curNum = ""
         }
     }
 }

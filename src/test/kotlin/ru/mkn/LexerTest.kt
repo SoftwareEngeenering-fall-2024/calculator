@@ -1,5 +1,4 @@
 
-import io.ktor.server.testing.*
 import ru.mkn.Lexer
 import ru.mkn.LiteralToken
 import ru.mkn.PrimitiveToken
@@ -8,11 +7,10 @@ import kotlin.test.*
 
 class LexerTest {
     @Test
-    fun testCorrectStr() = testApplication {
-        val str1 = "5+(4-6^2)"
-        val str2 = "15+16*(165-16.15)"
+    fun testCorrectIntStr() {
+        val str = "5+(4-6^2)"
 
-        val expect1 = arrayListOf(
+        val expect = arrayListOf(
             LiteralToken(Literal.IntLit(5)),
             PrimitiveToken.Plus,
             PrimitiveToken.LeftParen,
@@ -22,32 +20,37 @@ class LexerTest {
             PrimitiveToken.Cap,
             LiteralToken(Literal.IntLit(2)),
             PrimitiveToken.RightParen)
-        val expect2 = arrayListOf(
+
+        val res = Lexer(str).tokenize()
+
+        assertContentEquals(res, expect)
+    }
+
+    @Test
+    fun testCorrectFloatStr() {
+        val str = "15+16*(16.13-16.15)"
+
+        val expect = arrayListOf(
             LiteralToken(Literal.IntLit(15)),
             PrimitiveToken.Plus,
             LiteralToken(Literal.IntLit(16)),
             PrimitiveToken.Star,
             PrimitiveToken.LeftParen,
-            LiteralToken(Literal.IntLit(165)),
+            LiteralToken(Literal.FloatLit(16.13)),
             PrimitiveToken.Minus,
             LiteralToken(Literal.FloatLit(16.15)),
             PrimitiveToken.RightParen)
 
-        val res1 = Lexer(str1).tokenize()
-        val res2 = Lexer(str2).tokenize()
+        val res = Lexer(str).tokenize()
 
-        for (i in res1.indices)
-            assertEquals(res1[i], expect1[i])
-        for (i in res2.indices)
-            assertEquals(res2[i], expect2[i])
+        assertContentEquals(res, expect)
     }
 
     @Test
-    fun testMoreWhiteSpaces() = testApplication {
-        val str1 = "5    +   (4       -6 ^2)"
-        val str2 = "15    +16   *(  165   -16.15)"
+    fun testMoreWhiteSpaces1() {
+        val str = "5    +   (4       -6 ^2)"
 
-        val expect1 = arrayListOf(
+        val expect = arrayListOf(
             LiteralToken(Literal.IntLit(5)),
             PrimitiveToken.Plus,
             PrimitiveToken.LeftParen,
@@ -57,7 +60,17 @@ class LexerTest {
             PrimitiveToken.Cap,
             LiteralToken(Literal.IntLit(2)),
             PrimitiveToken.RightParen)
-        val expect2 = arrayListOf(
+
+        val res = Lexer(str).tokenize()
+
+        assertContentEquals(res, expect)
+    }
+
+    @Test
+    fun testMoreWhiteSpaces2() {
+        val str = "15    +16   *(  165   -16.15)"
+
+        val expect = arrayListOf(
             LiteralToken(Literal.IntLit(15)),
             PrimitiveToken.Plus,
             LiteralToken(Literal.IntLit(16)),
@@ -68,21 +81,16 @@ class LexerTest {
             LiteralToken(Literal.FloatLit(16.15)),
             PrimitiveToken.RightParen)
 
-        val res1 = Lexer(str1).tokenize()
-        val res2 = Lexer(str2).tokenize()
+        val res = Lexer(str).tokenize()
 
-        for (i in res1.indices)
-            assertEquals(res1[i], expect1[i])
-        for (i in res2.indices)
-            assertEquals(res2[i], expect2[i])
+        assertContentEquals(res, expect)
     }
 
     @Test
-    fun testIncorrectStr() = testApplication {
-        val str1 = "++5 +-   ^2)"
-        val str2 = "..15+16  *(..165-16.    15)"
+    fun testIncorrectStr() {
+        val str = "++5 +-   ^2)"
 
-        val expect1 = arrayListOf(
+        val expect = arrayListOf(
             PrimitiveToken.Plus,
             PrimitiveToken.Plus,
             LiteralToken(Literal.IntLit(5)),
@@ -91,24 +99,52 @@ class LexerTest {
             PrimitiveToken.Cap,
             LiteralToken(Literal.IntLit(2)),
             PrimitiveToken.RightParen)
-        val expect2 = arrayListOf(
+
+        val res = Lexer(str).tokenize()
+
+        assertContentEquals(res, expect)
+    }
+
+    @Test
+    fun testMoreDots1() {
+        val str1 = ".2.1...2.4."
+
+        val expect1 = arrayListOf(
+            PrimitiveToken.DotToken,
+            LiteralToken(Literal.FloatLit(2.1)),
+            PrimitiveToken.DotToken,
+            PrimitiveToken.DotToken,
+            PrimitiveToken.DotToken,
+            LiteralToken(Literal.FloatLit(2.4)),
+            PrimitiveToken.DotToken)
+
+        val res1 = Lexer(str1).tokenize()
+
+        assertContentEquals(res1, expect1)
+    }
+    @Test
+    fun testMoreDots2() {
+        val str = "..15+16.  *(..165-16.    15)"
+
+        val expect = arrayListOf(
+            PrimitiveToken.DotToken,
+            PrimitiveToken.DotToken,
             LiteralToken(Literal.IntLit(15)),
             PrimitiveToken.Plus,
-            LiteralToken(Literal.IntLit(16)),
+            LiteralToken(Literal.FloatLit(16.0)),
             PrimitiveToken.Star,
             PrimitiveToken.LeftParen,
+            PrimitiveToken.DotToken,
+            PrimitiveToken.DotToken,
             LiteralToken(Literal.IntLit(165)),
             PrimitiveToken.Minus,
             LiteralToken(Literal.FloatLit(16.15)),
             PrimitiveToken.RightParen)
 
-        val res1 = Lexer(str1).tokenize()
-        val res2 = Lexer(str2).tokenize()
+        val res = Lexer(str).tokenize()
 
-        for (i in res1.indices)
-            assertEquals(res1[i], expect1[i])
-        for (i in res2.indices)
-            assertEquals(res2[i], expect2[i])
+        assertContentEquals(res, expect)
     }
+
 }
 

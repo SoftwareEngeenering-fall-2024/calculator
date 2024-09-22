@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+set -ex
 if [ "$1" != "minimal" ] && [ "$1" != "develop" ]; then
     echo "Usage: ./install.sh <minimal|develop>"
     exit 1
@@ -21,9 +21,7 @@ fi
 
 
 if ! type "nix" &> /dev/null; then
-    curl -L https://nixos.org/nix/install | sh
-    sudo usermod -aG nix-users $(whoami)
-    newgrp nix-users
+    sh <(curl -L https://nixos.org/nix/install) --daemon --yes
 fi
 
 if ! nix flake info &> /dev/null; then
@@ -31,13 +29,14 @@ if ! nix flake info &> /dev/null; then
     echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
 fi
 
-nix develop ".#${flake_variant}" -c 'true'
+bash -cl "nix develop '.#${flake_variant}' -c 'true'"
 
 if [ "$target" = "develop" ]; then
+    mkdir -p ~/.local/share/applications
     cat > ~/.local/share/applications/idea-se-project-fall-2024.desktop <<FILE
 [Desktop Entry]
 Name=Idea SE Project Fall 2024
-Exec=nix develop '$(pwd)#$flake_variant' -c idea-community
+Exec=bash -cl 'nix develop "$(pwd)#$flake_variant" -c idea-community'
 Type=Application
 Categories=Development;
 StartupNotify=true

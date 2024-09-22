@@ -1,0 +1,16 @@
+
+CREATE TABLE evaluations (
+  id INTEGER PRIMARY KEY NOT NULL,
+  expression TEXT NOT NULL,
+  result TEXT NOT NULL
+);
+
+CREATE INDEX evaluations_id ON evaluations(id);
+
+selectAll:
+SELECT *
+FROM evaluations;
+
+insert:
+INSERT INTO evaluations(expression, result)
+VALUES (?, ?);

@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "2.0.20"
     id("io.ktor.plugin") version "2.3.12"
     kotlin("plugin.serialization") version "2.0.20"
+    id("app.cash.sqldelight") version "2.0.2"
 }
 
 group = "ru.mkn"
@@ -29,6 +30,17 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml")
     implementation("io.ktor:ktor-server-resources:$ktor_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+
+    implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
+
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+}
+
+sqldelight {
+  databases {
+    create("Database") {
+      packageName.set("ru.mkn")
+    }
+  }
 }

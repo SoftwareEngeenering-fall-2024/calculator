@@ -26,6 +26,10 @@ class Parser(val tokens: ArrayList<Token>) {
     private val tokenCursor = TokenCursor()
     private var token : Token = DummyToken
 
+    init {
+        bump()
+    }
+
     private fun bump() {
         token = tokenCursor.next() ?: DummyToken
     }
@@ -43,7 +47,7 @@ class Parser(val tokens: ArrayList<Token>) {
 
     private fun expect(curToken: Token) : Result<Unit, String> = binding {
         if (token != curToken) {
-            Err("Unexpected token")
+            Err("Unexpected token $curToken, $token expected")
         } else {
             bump()
         }
@@ -66,7 +70,7 @@ class Parser(val tokens: ArrayList<Token>) {
                 expr
             }
             else -> {
-                Err("Unexpected token").bind()
+                Err("Unexpected token $curToken, $token expected").bind()
             }
         }
     }
@@ -76,10 +80,12 @@ class Parser(val tokens: ArrayList<Token>) {
         var op : Operator? = null
         while (true) {
             op = Operator.fromToken(token) ?: break
-            if (op.precedence() < minPrec) {
+            val prec = op.precedence()
+            if (prec < minPrec) {
                 break
             }
-            val rhs = parseWithPrec(minPrec).bind()
+            bump()
+            val rhs = parseWithPrec(prec + 1).bind()
             lhs = makeExpr(makeBinary(op.toAstBinOp(), lhs, rhs))
         }
         lhs

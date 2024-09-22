@@ -1,5 +1,11 @@
 package ru.mkn.data
 
 enum class UnaryKind {
-    Neg
+    Neg;
+
+    override fun toString(): String {
+        return when (this) {
+            Neg -> "-"
+        }
+    }
 }

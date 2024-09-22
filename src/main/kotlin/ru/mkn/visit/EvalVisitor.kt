@@ -22,8 +22,7 @@ class EvalVisitor : Visitor<Result<Value, String>> {
                         val quotient = leftResult / rightResult
                         if (quotient == null) {
                             Err("Division by zero!")
-                        }
-                        else {
+                        } else {
                             Ok(quotient)
                         }
                     }

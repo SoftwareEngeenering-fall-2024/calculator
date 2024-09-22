@@ -23,6 +23,7 @@ fi
 if ! type "nix" &> /dev/null; then
     curl -L https://nixos.org/nix/install | sh
     sudo usermod -aG nix-users $(whoami)
+    newgrp nix-users
 fi
 
 if ! nix flake info &> /dev/null; then

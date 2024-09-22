@@ -1,44 +1,32 @@
-# Calculator
-## Installing development environment
+# Calculator backend
+## Install development environment
 
-1. Install nix package manager into your system:
-```#shell
-curl -L https://nixos.org/nix/install | sh
-```
-2. Configure nix
-```#shell
-mkdir -p ~/.config/nix
-echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
-```
-3. Enter into the environment
-    * If you have system-wide installed IDEA:
+Run installation script in suitable variant
+* Developer installation
     ```#shell
-    # from the project root directory
-    nix develop '.#no-idea'
+    ./install.sh develop
     ```
-    * If you haven't system-wide installed IDEA:
+  This variant creates desktop file that launch configured IDEA, so you can
+  select "IDEA SE Project Fall 2024" in your application launcher to start IDEA.
+
+* Minimal build and run installation
     ```#shell
-    # from the project root directory
-    nix develop
+    ./install.sh minimal
     ```
-4. Start idea-community
 
-   ```#shell
-   idea-community
-   ```
+## Run app from CLI or Gradle 101
+First of all you should be under nix environment:
+```#shell
+nix develop # from the project root directory
+```
 
-## Gradle usage
-General rule: you shouldn't use `./gradlew` or bring
-it into the repository.
-
-Use `gradle` command that provided by nix flake,
+Now you can use `gradle` command that provided by nix flake,
 and your system will remain clean.
 
 Most useful commands:
 * `gradle build`
 * `gradle run`
 * `gradle test`
+* `gradle help`
 
 ## [Architecture design](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Calculator.drawio#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1n22IL4d48abKkXYeTFZID624mQQqpETp%26export%3Ddownload)
-
-<!-- TODO[akhorokhorin,kmitkin]: complete readme -->

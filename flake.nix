@@ -15,17 +15,18 @@
           sqlite
       ];
     in {
-      devShells = {
-        no-idea = pkgs.mkShell {
+      devShells = rec {
+        minimal = pkgs.mkShell {
           name = "kotlin";
           buildInputs = core-pkgs;
           GRADLE_USER_HOME="./gradle-cache";
         };
-        default = pkgs.mkShell {
-          name = "kotlin-idea";
+        with-idea = pkgs.mkShell {
+          name = "kotlin-with-idea";
           buildInputs = core-pkgs ++ [pkgs.jetbrains.idea-community];
           GRADLE_USER_HOME="./gradle-cache";
         };
+        default = minimal;
       };
     });
 }

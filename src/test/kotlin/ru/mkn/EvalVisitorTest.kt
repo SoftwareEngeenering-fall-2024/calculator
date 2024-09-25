@@ -102,4 +102,12 @@ class EvalVisitorTest {
 
         assertEquals(Ok(Value.FloatValue(45.324)), evalVisitor.visit(expr))
     }
+
+    @Test
+    fun intDivide() {
+        val left = Expr(ExprKind.Literal(Literal.IntLit(55)))
+        val right = Expr(ExprKind.Binary(BinaryKind.Sub, Expr(ExprKind.Literal(Literal.IntLit(17))), Expr(ExprKind.Literal(Literal.IntLit(6)))))
+        val expr = Expr(ExprKind.Binary(BinaryKind.Div, left, right))
+        assertEquals(Ok(Value.IntValue(5)), evalVisitor.visit(expr))
+    }
 }

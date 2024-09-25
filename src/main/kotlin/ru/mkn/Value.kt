@@ -56,7 +56,13 @@ sealed class Value {
         return when (this) {
             is IntValue -> when (value) {
                 is FloatValue -> FloatValue(this.value / value.value)
-                is IntValue -> FloatValue(this.value.toDouble() / value.value)
+                is IntValue -> {
+                    if (this.value % value.value == 0) {
+                        IntValue(this.value / value.value)
+                    }  else {
+                        FloatValue(this.value.toDouble() / value.value)
+                    }
+                }
             }
 
             is FloatValue -> when (value) {

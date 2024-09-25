@@ -110,4 +110,12 @@ class EvalVisitorTest {
         val expr = Expr(ExprKind.Binary(BinaryKind.Div, left, right))
         assertEquals(Ok(Value.IntValue(5)), evalVisitor.visit(expr))
     }
+
+    @Test
+    fun floatSumPrecision() {
+        val left = Expr(ExprKind.Literal(Literal.FloatLit(2.0)))
+        val right = Expr(ExprKind.Literal(Literal.FloatLit(3.0)))
+        val expr = Expr(ExprKind.Binary(BinaryKind.Sum, left, right))
+        assertEquals(Ok(Value.FloatValue(5.0)), evalVisitor.visit(expr))
+    }
 }

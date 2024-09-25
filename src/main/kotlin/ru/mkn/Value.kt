@@ -15,13 +15,13 @@ sealed class Value {
 
     operator fun plus(value: Value): Value = when (this) {
         is IntValue -> when (value) {
-            is FloatValue -> FloatValue(this.value + value.value)
+            is FloatValue -> FloatValue((this.value.toBigDecimal() + value.value.toBigDecimal()).toDouble())
             is IntValue -> IntValue(this.value + value.value)
         }
 
         is FloatValue -> when (value) {
-            is FloatValue -> FloatValue(this.value + value.value)
-            is IntValue -> FloatValue(this.value + value.value)
+            is FloatValue -> FloatValue((this.value.toBigDecimal() + value.value.toBigDecimal()).toDouble())
+            is IntValue -> FloatValue((this.value.toBigDecimal() + value.value.toBigDecimal()).toDouble())
         }
     }
 
@@ -55,7 +55,7 @@ sealed class Value {
         }
         return when (this) {
             is IntValue -> when (value) {
-                is FloatValue -> FloatValue(this.value / value.value)
+                is FloatValue -> FloatValue((this.value.toBigDecimal() / value.value.toBigDecimal()).toDouble())
                 is IntValue -> {
                     if (this.value % value.value == 0) {
                         IntValue(this.value / value.value)
@@ -66,8 +66,8 @@ sealed class Value {
             }
 
             is FloatValue -> when (value) {
-                is FloatValue -> FloatValue(this.value / value.value)
-                is IntValue -> FloatValue(this.value / value.value)
+                is FloatValue -> FloatValue((this.value.toBigDecimal() / value.value.toBigDecimal()).toDouble())
+                is IntValue -> FloatValue((this.value.toBigDecimal() / value.value.toBigDecimal()).toDouble())
             }
         }
     }
